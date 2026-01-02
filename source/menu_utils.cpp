@@ -13,7 +13,7 @@ namespace HoanDev
 
     void Menu::draw()
     {
-        printf(HOME);
+        printf(HOME CLR_SCR);
         printf(BOLD "==== Main Menu ====\n" RESET);
 
         printf("%s1. Tinh tong hai so%s\n", activatedItem == 0 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
@@ -52,7 +52,7 @@ namespace HoanDev
         return static_cast<size_t>(activatedItem);
     }
 
-    void Menu::listenInput(const PadState *pad, int &selected_item)
+    void Menu::listenInput(PadState *pad, int &selected_item)
     {
         u64 kDown = padGetButtonsDown(pad);
 
@@ -67,6 +67,8 @@ namespace HoanDev
 
         if (kDown & HidNpadButton_A)
         {
+
+            padUpdate(pad);
             selected_item = static_cast<int>(activatedItem);
         }
     }

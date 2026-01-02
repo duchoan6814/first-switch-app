@@ -12,6 +12,7 @@ namespace HoanDev
     private:
         std::vector<std::string> options;
         size_t activatedItem;
+        PadState pad;
 
     public:
         Menu(const std::vector<std::string> &menu_options);
@@ -19,7 +20,7 @@ namespace HoanDev
         void moveUp();
         void moveDown();
         size_t getActivatedItem();
-        void listenInput(const PadState *pad, int &selected_item);
+        void listenInput(PadState *pad, int &selected_item);
     };
 }
 
