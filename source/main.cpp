@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <switch.h>
-#include "menu_utils.h"
+#include "menu_utils.hpp"
 
 bool getInputFormKeyboard(int *out_number);
 

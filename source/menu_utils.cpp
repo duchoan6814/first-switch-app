@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "menu_utils.h"
-#include "style.h"
+#include "menu_utils.hpp"
+#include "style.hpp"
 
 #include <switch.h>
 
