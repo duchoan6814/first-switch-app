@@ -4,47 +4,70 @@
 
 #include <switch.h>
 
-void draw_menu(int activated_item)
+namespace HoanDev
 {
-    printf(HOME);
-    printf(BOLD "==== Main Menu ====\n" RESET);
-
-    printf("%s1. Tinh tong hai so%s\n", activated_item == 0 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
-
-    printf("%s2. Danh sach tai khoan%s\n", activated_item == 1 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
-
-    printf("%s3. Thoat ung dung%s\n", activated_item == 2 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
-}
-
-void menu_handle_input(PadState *pad, int *activated_item, int *selected_item, int num_items)
-{
-    u64 kDown = padGetButtonsDown(pad);
-
-    if (kDown & HidNpadButton_Down)
+    Menu::Menu(const std::vector<std::string> &options)
+        : options(options), activatedItem(0)
     {
-        if (*activated_item < num_items - 1)
+    }
+
+    void Menu::draw()
+    {
+        printf(HOME);
+        printf(BOLD "==== Main Menu ====\n" RESET);
+
+        printf("%s1. Tinh tong hai so%s\n", activatedItem == 0 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
+
+        printf("%s2. Danh sach tai khoan%s\n", activatedItem == 1 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
+
+        printf("%s3. Thoat ung dung%s\n", activatedItem == 2 ? SELECTED_STYLE : UNSELECTED_STYLE, RESET);
+    }
+
+    void Menu::moveUp()
+    {
+        if (activatedItem > 0)
         {
-            (*activated_item)++;
+            activatedItem--;
         }
         else
         {
-            *activated_item = 0;
-        }
-    }
-    else if (kDown & HidNpadButton_Up)
-    {
-        if (*activated_item > 0)
-        {
-            (*activated_item)--;
-        }
-        else
-        {
-            *activated_item = num_items - 1;
+            activatedItem = options.size() - 1;
         }
     }
 
-    if (kDown & HidNpadButton_A)
+    void Menu::moveDown()
     {
-        *selected_item = *activated_item;
+        if (activatedItem < options.size() - 1)
+        {
+            activatedItem++;
+        }
+        else
+        {
+            activatedItem = 0;
+        }
+    }
+
+    size_t Menu::getActivatedItem()
+    {
+        return static_cast<size_t>(activatedItem);
+    }
+
+    void Menu::listenInput(const PadState *pad, int &selected_item)
+    {
+        u64 kDown = padGetButtonsDown(pad);
+
+        if (kDown & HidNpadButton_Down)
+        {
+            Menu::moveDown();
+        }
+        else if (kDown & HidNpadButton_Up)
+        {
+            Menu::moveUp();
+        }
+
+        if (kDown & HidNpadButton_A)
+        {
+            selected_item = static_cast<int>(activatedItem);
+        }
     }
 }

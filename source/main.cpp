@@ -57,8 +57,9 @@ int main(int argc, char *argv[])
     // int a = 0;
     // int b = 0;
     // int step = 0;
-    int activated_item = 0;
     int selected_item = -1;
+
+    HoanDev::Menu mainMenu({"Tinh tong hai so", "Danh sach tai khoan", "Thoat ung dung"});
 
     consoleInit(NULL);
 
@@ -85,11 +86,8 @@ int main(int argc, char *argv[])
         if (kDown & HidNpadButton_Plus)
             break;
 
-        if (selected_item == -1)
-        {
-            draw_menu(activated_item);
-            menu_handle_input(&pad, &activated_item, &selected_item, 3);
-        }
+        mainMenu.draw();
+        mainMenu.listenInput(&pad, selected_item);
 
         // if (kDown & HidNpadButton_A)
         // {
