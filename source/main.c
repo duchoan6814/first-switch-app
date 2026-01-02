@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include <switch.h>
+#include "menu_utils.h"
 
 bool getInputFormKeyboard(int *out_number);
 
@@ -53,9 +54,11 @@ bool getInputFormKeyboard(int *out_number)
 
 int main(int argc, char *argv[])
 {
-    int a = 0;
-    int b = 0;
-    int step = 0;
+    // int a = 0;
+    // int b = 0;
+    // int step = 0;
+    int activated_item = 0;
+    int selected_item = -1;
 
     consoleInit(NULL);
 
@@ -64,79 +67,89 @@ int main(int argc, char *argv[])
     PadState pad;
     padInitializeDefault(&pad);
 
-    printf(
-        CONSOLE_ESC(1; 1H)
-            CONSOLE_ESC(1m) "Xin chao ban!, day la mot ung dung don gian tren Nintendo Switch.");
-    printf(
-        CONSOLE_ESC(3; 1H) "Nhan A de mo ban phim va nhap so thu nhat: ");
+    // printf(
+    //     CONSOLE_ESC(1; 1H)
+    //         CONSOLE_ESC(1m) "Xin chao ban!, day la mot ung dung don gian tren Nintendo Switch.");
+    // printf(
+    //     CONSOLE_ESC(3; 1H) "Nhan A de mo ban phim va nhap so thu nhat: ");
 
     while (appletMainLoop())
     {
+        if (selected_item == 2)
+            break;
+
         padUpdate(&pad);
 
         u64 kDown = padGetButtonsDown(&pad);
 
         if (kDown & HidNpadButton_Plus)
             break;
-        if (kDown & HidNpadButton_A)
+
+        if (selected_item == -1)
         {
-            if (step == 0)
-            {
-                if (getInputFormKeyboard(&a))
-                {
-                    printf(
-                        CONSOLE_ESC(3; 1H)
-                            CONSOLE_ESC(2K)
-
-                                "So thu nhat la: " CONSOLE_ESC(1; 37; 41m) "%d" CONSOLE_ESC(0m),
-                        a);
-                    printf(
-                        CONSOLE_ESC(5; 1H) "Nhan A de mo ban phim va nhap so thu hai: ");
-                    step = 1;
-                }
-            }
-            else if (step == 1)
-            {
-                if (getInputFormKeyboard(&b))
-                {
-                    printf(
-                        CONSOLE_ESC(5; 1H)
-                            CONSOLE_ESC(2K)
-
-                                "So thu hai la: " CONSOLE_ESC(1; 37; 41m) "%d" CONSOLE_ESC(0m),
-                        b);
-                    printf(
-                        CONSOLE_ESC(7; 1H)
-                            CONSOLE_ESC(2K) "Nhan A de tinh tong hai so.");
-                    step = 2;
-                }
-            }
-            else if (step == 2)
-            {
-                int sum = a + b;
-                printf(
-                    CONSOLE_ESC(7; 1H)
-                        CONSOLE_ESC(2K)
-
-                            CONSOLE_ESC(1; 32; 40m) "Tong cua %d va %d la: %d" CONSOLE_ESC(0m),
-                    a, b, sum);
-                printf(
-                    CONSOLE_ESC(9; 1H) "Nhan A de nhap lai hai so.");
-
-                step = 3;
-            }
-            else if (step == 3)
-            {
-                a = 0;
-                b = 0;
-                step = 0;
-                printf(
-                    CONSOLE_ESC(3; 1H)
-                        CONSOLE_ESC(0J));
-                printf(
-                    CONSOLE_ESC(3; 1H) "Nhan A de mo ban phim va nhap so thu nhat: ");
-            }
+            draw_menu(activated_item);
+            menu_handle_input(&pad, &activated_item, &selected_item, 3);
         }
+
+        // if (kDown & HidNpadButton_A)
+        // {
+        //     if (step == 0)
+        //     {
+        //         if (getInputFormKeyboard(&a))
+        //         {
+        //             printf(
+        //                 CONSOLE_ESC(3; 1H)
+        //                     CONSOLE_ESC(2K)
+
+        //                         "So thu nhat la: " CONSOLE_ESC(1; 37; 41m) "%d" CONSOLE_ESC(0m),
+        //                 a);
+        //             printf(
+        //                 CONSOLE_ESC(5; 1H) "Nhan A de mo ban phim va nhap so thu hai: ");
+        //             step = 1;
+        //         }
+        //     }
+        //     else if (step == 1)
+        //     {
+        //         if (getInputFormKeyboard(&b))
+        //         {
+        //             printf(
+        //                 CONSOLE_ESC(5; 1H)
+        //                     CONSOLE_ESC(2K)
+
+        //                         "So thu hai la: " CONSOLE_ESC(1; 37; 41m) "%d" CONSOLE_ESC(0m),
+        //                 b);
+        //             printf(
+        //                 CONSOLE_ESC(7; 1H)
+        //                     CONSOLE_ESC(2K) "Nhan A de tinh tong hai so.");
+        //             step = 2;
+        //         }
+        //     }
+        //     else if (step == 2)
+        //     {
+        //         int sum = a + b;
+        //         printf(
+        //             CONSOLE_ESC(7; 1H)
+        //                 CONSOLE_ESC(2K)
+
+        //                     CONSOLE_ESC(1; 32; 40m) "Tong cua %d va %d la: %d" CONSOLE_ESC(0m),
+        //             a, b, sum);
+        //         printf(
+        //             CONSOLE_ESC(9; 1H) "Nhan A de nhap lai hai so.");
+
+        //         step = 3;
+        //     }
+        //     else if (step == 3)
+        //     {
+        //         a = 0;
+        //         b = 0;
+        //         step = 0;
+        //         printf(
+        //             CONSOLE_ESC(3; 1H)
+        //                 CONSOLE_ESC(0J));
+        //         printf(
+        //             CONSOLE_ESC(3; 1H) "Nhan A de mo ban phim va nhap so thu nhat: ");
+        //     }
+        // }
 
         consoleUpdate(NULL);
     }
